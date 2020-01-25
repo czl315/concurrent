@@ -2,9 +2,12 @@ package com.czl.locks.demo.reentrantwriteread;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import lombok.extern.slf4j.Slf4j;
 
-/**tryLock()-尝试锁
+/**
+ * tryLock()-尝试锁
+ *
  * @author one3c-chenzhilong9
  * @Description:
  * @Date 2019/12/9
@@ -13,11 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WriteLockTryLockTime implements Runnable {
 
-    ReentrantReadWriteLock lock ;
+    ReentrantReadWriteLock lock;
     int time;
     TimeUnit timeUnit;
 
-    public WriteLockTryLockTime(ReentrantReadWriteLock lock,int time,TimeUnit timeUnit) {
+    public WriteLockTryLockTime(ReentrantReadWriteLock lock, int time, TimeUnit timeUnit) {
         this.lock = lock;
         this.time = time;
         this.timeUnit = timeUnit;
@@ -31,19 +34,19 @@ public class WriteLockTryLockTime implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if(lockFlag){
-                try {
-                    log.info(Thread.currentThread().getName() + "-lock.writeLock().tryLock(timeout)");
-                    log.info(Thread.currentThread().getName() + "-尝试锁取到了{}",lockFlag);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    lock.writeLock().unlock();
-                    log.info(Thread.currentThread().getName() + "-lock.writeLock().unlock(timeout)");
-                }
-            }else{
-                log.info(Thread.currentThread().getName() + "-尝试锁不能获取{}",lockFlag);
+        if (lockFlag) {
+            try {
+                log.info(Thread.currentThread().getName() + "-lock.writeLock().tryLock(timeout)");
+                log.info(Thread.currentThread().getName() + "-尝试锁取到了{}", lockFlag);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                lock.writeLock().unlock();
+                log.info(Thread.currentThread().getName() + "-lock.writeLock().unlock(timeout)");
             }
+        } else {
+            log.info(Thread.currentThread().getName() + "-尝试锁不能获取{}", lockFlag);
+        }
 
     }
 }

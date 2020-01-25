@@ -9,41 +9,41 @@ import java.util.concurrent.locks.Lock;
  * 用于为每个对象得到具有多个等待设定（wait-sets），通过将它们与使用任意的组合的产生Lock实现的用法。
  * Lock替换synchronized方法和语句的使用，
  * Condition取代了对象监视器方法的使用。
- *  条件（也称为条件队列或条件变量 ）为一个线程暂停执行（“等待”）提供了一种方法，直到另一个线程通知某些状态现在可能为真。
- *  因为访问此共享状态信息发生在不同的线程中，所以它必须被保护，因此某种形式的锁与该条件相关联。
- *  等待条件的关键属性是它原子地释放相关的锁并挂起当前线程，就像Object.wait 。
- *   一个Condition实例本质上绑定到一个锁。 要获得特定Condition实例的Condition实例，请使用其newCondition()方法。
- *    例如，假设我们有一个有限的缓冲区，它支持put和take方法。
- *    如果在一个空的缓冲区尝试一个take ，则线程将阻塞直到一个项目可用; 如果put试图在一个完整的缓冲区，那么线程将阻塞，直到空间变得可用。
- *    我们希望在单独的等待集中等待put线程和take线程，以便我们可以在缓冲区中的项目或空间可用的时候使用仅通知单个线程的优化。
- *    这可以使用两个Condition实例来实现。
- *    （ ArrayBlockingQueue类提供此功能，因此没有理由实现此示例使用类。）
- *
+ * 条件（也称为条件队列或条件变量 ）为一个线程暂停执行（“等待”）提供了一种方法，直到另一个线程通知某些状态现在可能为真。
+ * 因为访问此共享状态信息发生在不同的线程中，所以它必须被保护，因此某种形式的锁与该条件相关联。
+ * 等待条件的关键属性是它原子地释放相关的锁并挂起当前线程，就像Object.wait 。
+ * 一个Condition实例本质上绑定到一个锁。 要获得特定Condition实例的Condition实例，请使用其newCondition()方法。
+ * 例如，假设我们有一个有限的缓冲区，它支持put和take方法。
+ * 如果在一个空的缓冲区尝试一个take ，则线程将阻塞直到一个项目可用; 如果put试图在一个完整的缓冲区，那么线程将阻塞，直到空间变得可用。
+ * 我们希望在单独的等待集中等待put线程和take线程，以便我们可以在缓冲区中的项目或空间可用的时候使用仅通知单个线程的优化。
+ * 这可以使用两个Condition实例来实现。
+ * （ ArrayBlockingQueue类提供此功能，因此没有理由实现此示例使用类。）
+ * <p>
  * Condition实现可以提供Object监视器方法的行为和语义，例如有保证的通知顺序，或者在执行通知时不需要锁定。
  * 如果一个实现提供了这样的专门的语义，那么实现必须记录这些语义。
- *
+ * <p>
  * 需要注意的是Condition实例只是普通的对象，其本身作为一个目标synchronized语句，可以有自己的监视器wait和notification个方法调用。
  * 获取Condition实例的监视器锁或使用其监视方法与获取与该Condition相关联的Condition或使用其waiting和signalling方法没有特定关系。
  * 建议为避免混淆，您永远不会以这种方式使用Condition实例，除了可能在自己的实现之内。
- *
+ * <p>
  * 除非另有说明，传递任何参数的null值将导致NullPointerException被抛出。
  * 实施注意事项
- *
+ * <p>
  * 当等待Condition时，允许发生“ 虚假唤醒 ”，一般来说，作为对底层平台语义的让步。
  * 这对大多数应用程序几乎没有实际的影响，因为Condition应该始终在循环中等待，测试正在等待的状态谓词。
  * 一个实现可以免除虚假唤醒的可能性，但建议应用程序员总是假定它们可以发生，因此总是等待循环。
- *
+ * <p>
  * 条件等待（可中断，不可中断和定时）的三种形式在一些平台上的易用性和性能特征可能不同。
  * 特别地，可能难以提供这些特征并保持特定的语义，例如排序保证。
  * 此外，中断线程实际挂起的能力可能并不总是在所有平台上实现。
- *
+ * <p>
  * 因此，不需要一个实现来为所有三种形式的等待定义完全相同的保证或语义，也不需要支持中断线程的实际暂停。
- *
+ * <p>
  * 需要一个实现来清楚地记录每个等待方法提供的语义和保证，并且当一个实现确实支持线程挂起中断时，它必须遵守该接口中定义的中断语义。
- *
+ * <p>
  * 由于中断通常意味着取消，并且检查中断通常是不频繁的，所以实现可以有利于通过正常方法返回来响应中断。
  * 即使可以显示中断发生在另一个可能解除阻塞线程的动作之后，这一点也是如此。 一个实现应该记录这个行为
- *
+ * <p>
  * {@code Condition} factors out the {@code Object} monitor
  * methods ({@link Object#wait() wait}, {@link Object#notify notify}
  * and {@link Object#notifyAll notifyAll}) into distinct objects to
@@ -116,7 +116,7 @@ import java.util.concurrent.locks.Lock;
  *   }
  * }
  * </pre>
- *
+ * <p>
  * (The {@link java.util.concurrent.ArrayBlockingQueue} class provides
  * this functionality, so there is no reason to implement this
  * sample usage class.)
@@ -179,8 +179,8 @@ import java.util.concurrent.locks.Lock;
  * shown that the interrupt occurred after another action that may have
  * unblocked the thread. An implementation should document this behavior.
  *
- * @since 1.5
  * @author Doug Lea
+ * @since 1.5
  */
 public interface Condition {
 
@@ -232,7 +232,7 @@ public interface Condition {
      * there is one.
      *
      * @throws InterruptedException if the current thread is interrupted
-     *         (and interruption of thread suspension is supported)
+     *                              (and interruption of thread suspension is supported)
      */
     void await() throws InterruptedException;
 
@@ -314,7 +314,7 @@ public interface Condition {
      * condition still does not hold. Typical uses of this method take
      * the following form:
      *
-     *  <pre> {@code
+     * <pre> {@code
      * boolean aMethod(long timeout, TimeUnit unit) {
      *   long nanos = unit.toNanos(timeout);
      *   lock.lock();
@@ -353,13 +353,13 @@ public interface Condition {
      *
      * @param nanosTimeout the maximum time to wait, in nanoseconds
      * @return an estimate of the {@code nanosTimeout} value minus
-     *         the time spent waiting upon return from this method.
-     *         A positive value may be used as the argument to a
-     *         subsequent call to this method to finish waiting out
-     *         the desired time.  A value less than or equal to zero
-     *         indicates that no time remains.
+     * the time spent waiting upon return from this method.
+     * A positive value may be used as the argument to a
+     * subsequent call to this method to finish waiting out
+     * the desired time.  A value less than or equal to zero
+     * indicates that no time remains.
      * @throws InterruptedException if the current thread is interrupted
-     *         (and interruption of thread suspension is supported)
+     *                              (and interruption of thread suspension is supported)
      */
     long awaitNanos(long nanosTimeout) throws InterruptedException;
 
@@ -367,14 +367,14 @@ public interface Condition {
      * Causes the current thread to wait until it is signalled or interrupted,
      * or the specified waiting time elapses. This method is behaviorally
      * equivalent to:
-     *  <pre> {@code awaitNanos(unit.toNanos(time)) > 0}</pre>
+     * <pre> {@code awaitNanos(unit.toNanos(time)) > 0}</pre>
      *
      * @param time the maximum time to wait
      * @param unit the time unit of the {@code time} argument
      * @return {@code false} if the waiting time detectably elapsed
-     *         before return from the method, else {@code true}
+     * before return from the method, else {@code true}
      * @throws InterruptedException if the current thread is interrupted
-     *         (and interruption of thread suspension is supported)
+     *                              (and interruption of thread suspension is supported)
      */
     boolean await(long time, TimeUnit unit) throws InterruptedException;
 
@@ -416,7 +416,7 @@ public interface Condition {
      *
      * <p>The return value indicates whether the deadline has elapsed,
      * which can be used as follows:
-     *  <pre> {@code
+     * <pre> {@code
      * boolean aMethod(Date deadline) {
      *   boolean stillWaiting = true;
      *   lock.lock();
@@ -449,9 +449,9 @@ public interface Condition {
      *
      * @param deadline the absolute time to wait until
      * @return {@code false} if the deadline has elapsed upon return, else
-     *         {@code true}
+     * {@code true}
      * @throws InterruptedException if the current thread is interrupted
-     *         (and interruption of thread suspension is supported)
+     *                              (and interruption of thread suspension is supported)
      */
     boolean awaitUntil(Date deadline) throws InterruptedException;
 

@@ -7,6 +7,6 @@ package com.czl.thread;
 public class CzlThreadImplFace implements Runnable {
     @Override
     public void run() {
-        System.out.println("[实现Runnable]czl线程名称："+Thread.currentThread().getName());
+        System.out.println("[实现Runnable]czl线程名称：" + Thread.currentThread().getName());
     }
 }

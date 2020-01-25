@@ -42,12 +42,12 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 /**
- *  一个与隐含监控锁使用{@code synchronized}方法和语法功能的可扩展的可重入互斥锁。
- *  一把重入锁属于最后成功锁定的线程锁拥有，并且还没有解锁这个线程。
- *  当一个线程未被其他线程所持有时此线程调用{@code lock}会返回，成功地获取锁。
- *  如果当前线程已经有锁，方法会立即返回。
- *  这种情况可以使用 {@link #isHeldByCurrentThread}、{@link #getHoldCount}检查。
- *
+ * 一个与隐含监控锁使用{@code synchronized}方法和语法功能的可扩展的可重入互斥锁。
+ * 一把重入锁属于最后成功锁定的线程锁拥有，并且还没有解锁这个线程。
+ * 当一个线程未被其他线程所持有时此线程调用{@code lock}会返回，成功地获取锁。
+ * 如果当前线程已经有锁，方法会立即返回。
+ * 这种情况可以使用 {@link #isHeldByCurrentThread}、{@link #getHoldCount}检查。
+ * <p>
  * ReentrantLock的构造函数有一个公平性参数boolean，来确定，可重入锁是公平锁，还是非公平锁。
  * 如果是公平锁，当锁没有持有者时，将锁授予，最早等待获取锁的线程；非公平锁，不能保证按照
  * 获取锁的顺序，将锁的授予线程；非公平锁在性能上，更优一些，但在获取锁的尝试次数和保证
@@ -58,9 +58,9 @@ import java.util.concurrent.locks.Lock;
  * 为什么，非公平锁的性能比公平锁要高呢？假设现在有一些线程在等待锁，当锁被持有者释放时，
  * 这时，正好有一个线程获取锁，非公平锁则获取成功，公平锁则要从锁等待队列线程中，唤醒一个线程
  * ，进入就绪运行状态，切换上下文，倒不如，让正在请求锁的线程，直接获取锁。
- *
- 在使用ReentrantLock时候，强烈建议在获取锁后面使用try语句块，以便在
- finally中释放锁，如下
+ * <p>
+ * 在使用ReentrantLock时候，强烈建议在获取锁后面使用try语句块，以便在
+ * finally中释放锁，如下
  * <pre>
  * class X {
  *   private final ReentrantLock lock = new ReentrantLock();
@@ -76,17 +76,17 @@ import java.util.concurrent.locks.Lock;
  *   }
  * }
  * </pre>
- *
- *  对于实现可重入锁ReentrantLock，除了Lock中的方法外，还可以调用
- *  ReentrantLock锁的isLocked和getLockQueueLength方法，和一些protected的
- *  方法，以便监视锁的状态
- *
- *   序列化可重入锁ReentrantLock，则忽略锁状态,反序列化时，锁处于unlocked state；
- *
- *   一个线程可以持有锁的次数为2147483647(2^31-1),当尝试次数，超过最大限制时，则
- *  抛出异常，如果线程在持有2147483647次的情况下，再TryAcquire，则锁的持有数为-1；
- *  超过整数范围溢出；
- *
+ * <p>
+ * 对于实现可重入锁ReentrantLock，除了Lock中的方法外，还可以调用
+ * ReentrantLock锁的isLocked和getLockQueueLength方法，和一些protected的
+ * 方法，以便监视锁的状态
+ * <p>
+ * 序列化可重入锁ReentrantLock，则忽略锁状态,反序列化时，锁处于unlocked state；
+ * <p>
+ * 一个线程可以持有锁的次数为2147483647(2^31-1),当尝试次数，超过最大限制时，则
+ * 抛出异常，如果线程在持有2147483647次的情况下，再TryAcquire，则锁的持有数为-1；
+ * 超过整数范围溢出；
+ * <p>
  * A reentrant mutual exclusion {@link Lock} with the same basic
  * behavior and semantics as the implicit monitor lock accessed using
  * {@code synchronized} methods and statements, but with extended
@@ -121,7 +121,7 @@ import java.util.concurrent.locks.Lock;
  * follow a call to {@code lock} with a {@code try} block, most
  * typically in a before/after construction such as:
  *
- *  <pre> {@code
+ * <pre> {@code
  * class X {
  *   private final ReentrantLock lock = new ReentrantLock();
  *   // ...
@@ -149,8 +149,8 @@ import java.util.concurrent.locks.Lock;
  * the same thread. Attempts to exceed this limit result in
  * {@link Error} throws from locking methods.
  *
- * @since 1.5
  * @author Doug Lea
+ * @since 1.5
  */
 public class ReentrantLock implements Lock, java.io.Serializable {
     private static final long serialVersionUID = 7373984872572414699L;
@@ -191,8 +191,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
                     setExclusiveOwnerThread(current);
                     return true;
                 }
-            }
-            else if (current == getExclusiveOwnerThread()) {
+            } else if (current == getExclusiveOwnerThread()) {
                 int nextc = c + acquires;
                 if (nextc < 0) // overflow
                     throw new Error("Maximum lock count exceeded");
@@ -246,7 +245,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
          * Reconstitutes the instance from a stream (that is, deserializes it).
          */
         private void readObject(java.io.ObjectInputStream s)
-            throws java.io.IOException, ClassNotFoundException {
+                throws java.io.IOException, ClassNotFoundException {
             s.defaultReadObject();
             setState(0); // reset to unlocked state
         }
@@ -294,12 +293,11 @@ public class ReentrantLock implements Lock, java.io.Serializable {
             int c = getState();
             if (c == 0) {
                 if (!hasQueuedPredecessors() &&
-                    compareAndSetState(0, acquires)) {
+                        compareAndSetState(0, acquires)) {
                     setExclusiveOwnerThread(current);
                     return true;
                 }
-            }
-            else if (current == getExclusiveOwnerThread()) {
+            } else if (current == getExclusiveOwnerThread()) {
                 int nextc = c + acquires;
                 if (nextc < 0)
                     throw new Error("Maximum lock count exceeded");
@@ -382,7 +380,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * the lock,
      *
      * </ul>
-     *
+     * <p>
      * then {@link InterruptedException} is thrown and the current thread's
      * interrupted status is cleared.
      *
@@ -419,8 +417,8 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * immediately with the value {@code false}.
      *
      * @return {@code true} if the lock was free and was acquired by the
-     *         current thread, or the lock was already held by the current
-     *         thread; and {@code false} otherwise
+     * current thread, or the lock was already held by the current
+     * thread; and {@code false} otherwise
      */
     public boolean tryLock() {
         return sync.nonfairTryAcquire(1);
@@ -439,7 +437,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * method. If you want a timed {@code tryLock} that does permit barging on
      * a fair lock then combine the timed and un-timed forms together:
      *
-     *  <pre> {@code
+     * <pre> {@code
      * if (lock.tryLock() ||
      *     lock.tryLock(timeout, unit)) {
      *   ...
@@ -490,11 +488,11 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * over reporting the elapse of the waiting time.
      *
      * @param timeout the time to wait for the lock
-     * @param unit the time unit of the timeout argument
+     * @param unit    the time unit of the timeout argument
      * @return {@code true} if the lock was free and was acquired by the
-     *         current thread, or the lock was already held by the current
-     *         thread; and {@code false} if the waiting time elapsed before
-     *         the lock could be acquired
+     * current thread, or the lock was already held by the current
+     * thread; and {@code false} if the waiting time elapsed before
+     * the lock could be acquired
      * @throws InterruptedException if the current thread is interrupted
      * @throws NullPointerException if the time unit is null
      */
@@ -512,7 +510,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * lock then {@link IllegalMonitorStateException} is thrown.
      *
      * @throws IllegalMonitorStateException if the current thread does not
-     *         hold this lock
+     *                                      hold this lock
      */
     public void unlock() {
         sync.release(1);
@@ -572,7 +570,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * not be entered with the lock already held then we can assert that
      * fact:
      *
-     *  <pre> {@code
+     * <pre> {@code
      * class X {
      *   ReentrantLock lock = new ReentrantLock();
      *   // ...
@@ -588,7 +586,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * }}</pre>
      *
      * @return the number of holds on this lock by the current thread,
-     *         or zero if this lock is not held by the current thread
+     * or zero if this lock is not held by the current thread
      */
     public int getHoldCount() {
         return sync.getHoldCount();
@@ -602,7 +600,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * debugging and testing. For example, a method that should only be
      * called while a lock is held can assert that this is the case:
      *
-     *  <pre> {@code
+     * <pre> {@code
      * class X {
      *   ReentrantLock lock = new ReentrantLock();
      *   // ...
@@ -616,7 +614,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * <p>It can also be used to ensure that a reentrant lock is used
      * in a non-reentrant manner, for example:
      *
-     *  <pre> {@code
+     * <pre> {@code
      * class X {
      *   ReentrantLock lock = new ReentrantLock();
      *   // ...
@@ -633,7 +631,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * }}</pre>
      *
      * @return {@code true} if current thread holds this lock and
-     *         {@code false} otherwise
+     * {@code false} otherwise
      */
     public boolean isHeldByCurrentThread() {
         return sync.isHeldExclusively();
@@ -645,7 +643,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * not for synchronization control.
      *
      * @return {@code true} if any thread holds this lock and
-     *         {@code false} otherwise
+     * {@code false} otherwise
      */
     public boolean isLocked() {
         return sync.isLocked();
@@ -685,7 +683,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * monitoring of the system state.
      *
      * @return {@code true} if there may be other threads waiting to
-     *         acquire the lock
+     * acquire the lock
      */
     public final boolean hasQueuedThreads() {
         return sync.hasQueuedThreads();
@@ -746,16 +744,16 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * @param condition the condition
      * @return {@code true} if there are any waiting threads
      * @throws IllegalMonitorStateException if this lock is not held
-     * @throws IllegalArgumentException if the given condition is
-     *         not associated with this lock
-     * @throws NullPointerException if the condition is null
+     * @throws IllegalArgumentException     if the given condition is
+     *                                      not associated with this lock
+     * @throws NullPointerException         if the condition is null
      */
     public boolean hasWaiters(Condition condition) {
         if (condition == null)
             throw new NullPointerException();
         if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject))
             throw new IllegalArgumentException("not owner");
-        return sync.hasWaiters((AbstractQueuedSynchronizer.ConditionObject)condition);
+        return sync.hasWaiters((AbstractQueuedSynchronizer.ConditionObject) condition);
     }
 
     /**
@@ -769,16 +767,16 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * @param condition the condition
      * @return the estimated number of waiting threads
      * @throws IllegalMonitorStateException if this lock is not held
-     * @throws IllegalArgumentException if the given condition is
-     *         not associated with this lock
-     * @throws NullPointerException if the condition is null
+     * @throws IllegalArgumentException     if the given condition is
+     *                                      not associated with this lock
+     * @throws NullPointerException         if the condition is null
      */
     public int getWaitQueueLength(Condition condition) {
         if (condition == null)
             throw new NullPointerException();
         if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject))
             throw new IllegalArgumentException("not owner");
-        return sync.getWaitQueueLength((AbstractQueuedSynchronizer.ConditionObject)condition);
+        return sync.getWaitQueueLength((AbstractQueuedSynchronizer.ConditionObject) condition);
     }
 
     /**
@@ -794,16 +792,16 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * @param condition the condition
      * @return the collection of threads
      * @throws IllegalMonitorStateException if this lock is not held
-     * @throws IllegalArgumentException if the given condition is
-     *         not associated with this lock
-     * @throws NullPointerException if the condition is null
+     * @throws IllegalArgumentException     if the given condition is
+     *                                      not associated with this lock
+     * @throws NullPointerException         if the condition is null
      */
     protected Collection<Thread> getWaitingThreads(Condition condition) {
         if (condition == null)
             throw new NullPointerException();
         if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject))
             throw new IllegalArgumentException("not owner");
-        return sync.getWaitingThreads((AbstractQueuedSynchronizer.ConditionObject)condition);
+        return sync.getWaitingThreads((AbstractQueuedSynchronizer.ConditionObject) condition);
     }
 
     /**
@@ -817,7 +815,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
     public String toString() {
         Thread o = sync.getOwner();
         return super.toString() + ((o == null) ?
-                                   "[Unlocked]" :
-                                   "[Locked by thread " + o.getName() + "]");
+                "[Unlocked]" :
+                "[Locked by thread " + o.getName() + "]");
     }
 }
