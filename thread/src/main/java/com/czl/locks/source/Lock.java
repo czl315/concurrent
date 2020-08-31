@@ -1,15 +1,16 @@
 
 package com.czl.locks.source;
+
 import java.util.concurrent.TimeUnit;
 
 /**
  * Lock的实现比使用synchronized提供更多扩展的锁操作 方法和语句。
  * 他们允许更灵活的结构，可以有很多不同的属性，可以支持多种相关对象（Condition）
- *
+ * <p>
  * 锁是多线程用于控制对共享资源的访问的工具。
  * 通常，锁提供对a的共享资源独占访问:每次只有一个线程可以获取锁而且所有对共享资源的访问首先都需要锁获得。
  * 但是，有些锁可能允许并发访问，例如读锁ReadWriteLock。
- *
+ * <p>
  * {@code Lock} implementations provide more extensive locking
  * operations than can be obtained using {@code synchronized} methods
  * and statements.  They allow more flexible structuring, may have
@@ -62,7 +63,7 @@ import java.util.concurrent.TimeUnit;
  * methods and statements. In most cases, the following idiom
  * should be used:
  *
- *  <pre> {@code
+ * <pre> {@code
  * Lock l = ...;
  * l.lock();
  * try {
@@ -70,17 +71,17 @@ import java.util.concurrent.TimeUnit;
  * } finally {
  *   l.unlock();
  * }}</pre>
- *随着灵活性的增加，还带来了额外的责任。
- *块结构锁的减少消除了使用{@code synchronized}自动释放锁的方法和语句。
- *大多数情况下，下面的固定语法可以被使用：
- *Lock l = ...;
- *l.lock();
- *try {
- *  // access the resource protected by this lock
- *} finally {
- *  l.unlock();
- *}
- *
+ * 随着灵活性的增加，还带来了额外的责任。
+ * 块结构锁的减少消除了使用{@code synchronized}自动释放锁的方法和语句。
+ * 大多数情况下，下面的固定语法可以被使用：
+ * Lock l = ...;
+ * l.lock();
+ * try {
+ * // access the resource protected by this lock
+ * } finally {
+ * l.unlock();
+ * }
+ * <p>
  * When locking and unlocking occur in different scopes, care must be
  * taken to ensure that all code that is executed while the lock is
  * held is protected by try-finally or try-catch to ensure that the
@@ -144,7 +145,7 @@ import java.util.concurrent.TimeUnit;
  * Java语义规范(17.4 内存模型)
  * 成功的{@code lock}操作具有相同的内存同步效果作为一个成功的锁动作。
  * 解锁同样。
- *
+ * <p>
  * Unsuccessful locking and unlocking operations, and reentrant
  * locking/unlocking operations, do not require any memory
  * synchronization effects.
@@ -178,19 +179,18 @@ import java.util.concurrent.TimeUnit;
  * to an interrupt over normal method return. This is true even if it can be
  * shown that the interrupt occurred after another action may have unblocked
  * the thread. An implementation should document this behavior.
- *
+ * <p>
  * 由于中断通常意味着取消，并且中断检查通常是少见的，
  * 代码的实现可能更倾向于响应中断而不是正常的方法返回。
  * 即使可以显示在另一个操作之后发生的中断可能已经解除了线程的阻塞，他也是正确的。
  * 文档应该记录这种行为。
  *
+ * @author Doug Lea
  * @see ReentrantLock
  * @see Condition
  * @see ReadWriteLock
  * 参考 重入锁、条件、读写锁
- *
  * @since 1.5
- * @author Doug Lea
  */
 public interface Lock {
 
@@ -223,14 +223,14 @@ public interface Lock {
      * 如果锁不可用，则当前线程将出于线程调度目的而禁用，并处于休眠状态，直到休眠到会发生以下两种情况之一:
      * -当前线程获取到了锁
      * -其他线程中断当前线程，并且锁的获取支持了中断。
-     *     * 如果当前线程：
-     *      *      已经被它的中断状态设置到它方法的实体里；或者当获取锁时被中断，并且锁已支持中断。
-     *      * 当中断异常抛出时，并且当前线程的中断状态已被清除。
+     * * 如果当前线程：
+     * *      已经被它的中断状态设置到它方法的实体里；或者当获取锁时被中断，并且锁已支持中断。
+     * * 当中断异常抛出时，并且当前线程的中断状态已被清除。
      * 实现注意：
      * 中断一个锁获取的能力在一些实现中可能不可用，如果可用，它可能是一个昂贵的操作。
      * 程序员应该意识到这种情况。
      * 代码实现应该记录此情况。
-     *
+     * <p>
      * Acquires the lock unless the current thread is
      * {@linkplain Thread#interrupt interrupted}.
      *
@@ -276,9 +276,9 @@ public interface Lock {
      * 这种情况和异常类型必须由Lock的实现记录下来。
      *
      * @throws InterruptedException if the current thread is
-     *         interrupted while acquiring the lock (and interruption
-     *         of lock acquisition is supported)
-     *  抛出 中断异常：如果当前线程获取锁时被中断（并且锁获取支持了中断）
+     *                              interrupted while acquiring the lock (and interruption
+     *                              of lock acquisition is supported)
+     *                              抛出 中断异常：如果当前线程获取锁时被中断（并且锁获取支持了中断）
      */
     void lockInterruptibly() throws InterruptedException;
 
@@ -287,7 +287,7 @@ public interface Lock {
      * 如果可以获取锁，马上返回true
      * 如果不可以获取锁，马上返回 false。
      * 下面是通常使用的用法习惯：
-     *  <pre> {@code
+     * <pre> {@code
      * Lock lock = ...;
      * if (lock.tryLock()) {
      *   try {
@@ -299,7 +299,7 @@ public interface Lock {
      *   // perform alternative actions
      * }}</pre>
      * 这个用法确认当锁是无锁才会获取锁，并且如果锁没有获取到，不会尝试去解锁。
-     *
+     * <p>
      * Acquires the lock only if it is free at the time of invocation.
      *
      * <p>Acquires the lock if it is available and returns immediately
@@ -308,7 +308,7 @@ public interface Lock {
      * immediately with the value {@code false}.
      *
      * <p>A typical usage idiom for this method would be:
-     *  <pre> {@code
+     * <pre> {@code
      * Lock lock = ...;
      * if (lock.tryLock()) {
      *   try {
@@ -319,12 +319,12 @@ public interface Lock {
      * } else {
      *   // perform alternative actions
      * }}</pre>
-     *
+     * <p>
      * This usage ensures that the lock is unlocked if it was acquired, and
      * doesn't try to unlock if the lock was not acquired.
      *
      * @return {@code true} if the lock was acquired and
-     *         {@code false} otherwise
+     * {@code false} otherwise
      */
     boolean tryLock();
 
@@ -336,7 +336,7 @@ public interface Lock {
      * 2、其他线程中断当前线程，并且锁支持了中断。
      * 3、设定的时间到期了。
      * 如果获取到锁，那么返回true。
-     *
+     * <p>
      * Acquires the lock if it is free within the given waiting time and the
      * current thread has not been {@linkplain Thread#interrupt interrupted}.
      *
@@ -388,11 +388,10 @@ public interface Lock {
      * @param time the maximum time to wait for the lock
      * @param unit the time unit of the {@code time} argument
      * @return {@code true} if the lock was acquired and {@code false}
-     *         if the waiting time elapsed before the lock was acquired
-     *
+     * if the waiting time elapsed before the lock was acquired
      * @throws InterruptedException if the current thread is interrupted
-     *         while acquiring the lock (and interruption of lock
-     *         acquisition is supported)
+     *                              while acquiring the lock (and interruption of lock
+     *                              acquisition is supported)
      */
     boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
 
@@ -400,9 +399,9 @@ public interface Lock {
      * Releases the lock.
      * 释放锁
      * 实现注意：
-     *  代码的实现通常强制实施由那个线程能释放一把锁（只有锁特定的持有者能释放锁），
-     *  并且如果违反限制将会抛出未检查异常。
-     *  任何的限制和异常类型必须由锁的实现类来标记。
+     * 代码的实现通常强制实施由那个线程能释放一把锁（只有锁特定的持有者能释放锁），
+     * 并且如果违反限制将会抛出未检查异常。
+     * 任何的限制和异常类型必须由锁的实现类来标记。
      *
      * <p><b>Implementation Considerations</b>
      *
@@ -432,7 +431,7 @@ public interface Lock {
      *
      * @return A new {@link Condition} instance for this {@code Lock} instance
      * @throws UnsupportedOperationException if this {@code Lock}
-     *         implementation does not support conditions
+     *                                       implementation does not support conditions
      */
     Condition newCondition();
 }

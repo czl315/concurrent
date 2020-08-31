@@ -1,6 +1,7 @@
 package com.czl.locks.demo.reentrantwriteread;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -12,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WriteLock implements Runnable {
 
-    ReentrantReadWriteLock lock ;
+    ReentrantReadWriteLock lock;
 
     public WriteLock(ReentrantReadWriteLock lock) {
         this.lock = lock;

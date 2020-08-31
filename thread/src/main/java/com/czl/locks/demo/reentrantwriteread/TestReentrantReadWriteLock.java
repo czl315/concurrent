@@ -2,6 +2,7 @@ package com.czl.locks.demo.reentrantwriteread;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -17,7 +18,7 @@ public class TestReentrantReadWriteLock {
         ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
         //写锁测试
-        WriteLock(lock,5);
+        WriteLock(lock, 5);
 
         //读锁测试
         //ReadLock(lock,5);
@@ -34,6 +35,7 @@ public class TestReentrantReadWriteLock {
 
     /**
      * 读写共存
+     *
      * @param lock
      * @param count
      */

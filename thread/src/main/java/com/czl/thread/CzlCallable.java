@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
 public class CzlCallable implements Callable {
     @Override
     public Object call() throws Exception {
-        System.out.println("[实现Callable]czl线程名称："+Thread.currentThread().getName());
+        System.out.println("[实现Callable]czl线程名称：" + Thread.currentThread().getName());
         return Thread.currentThread().getName();
     }
 }
