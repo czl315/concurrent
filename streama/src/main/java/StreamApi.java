@@ -19,7 +19,8 @@ import java.util.stream.Stream;
  */
 public class StreamApi {
     /**
-     *一个集合流，支持顺序和并行聚合操作
+     *一个集合流，支持顺序和并行聚合操作.
+     * 下面的例子说明了使用{@link Stream} and {@link IntStream}的聚合操作。
      */
 
     /**
@@ -40,10 +41,16 @@ public class StreamApi {
      * transform it into a stream of {@code int} values representing the weight of
      * each red widget. Then this stream is summed to produce a total weight.
      *
+     * 在这个例子中，widgets是一个集合。我们创建一个widget对象流通过Collection.stream()，
+     * 过滤这个流生产一个只包含red的流，然后转换进一个int值，每个redwidget对象。
+     * 然后累计产生一个总量值。
+     *
      * <p>In addition to {@code Stream}, which is a stream of object references,
      * there are primitive specializations for {@link IntStream}, {@link LongStream},
      * and {@link DoubleStream}, all of which are referred to as "streams" and
      * conform to the characteristics and restrictions described here.
+     * 除了对象引用流，
+     *
      *
      * <p>To perform a computation, stream
      * <a href="package-summary.html#StreamOps">operations</a> are composed into a
@@ -66,12 +73,17 @@ public class StreamApi {
      * However, if the provided stream operations do not offer the desired
      * functionality, the {@link #iterator()} and {@link #spliterator()} operations
      * can be used to perform a controlled traversal.
+     * 集合和流虽然有一些相似性，但是他们的差异是不同的。
+     *  集合是为了高效对于元素的管理和访问。流并不会提供方式去直接操作流里的元素。（集合关注的是数据的管理，流关注的是元素内容的计算）
+     *  如果流操作并没有提供我们需要的功能，那么我们可以使用传统的iterator or spliterator去执行操作。
      *
      * <p>A stream pipeline, like the "widgets" example above, can be viewed as
      * a <em>query</em> on the stream source.  Unless the source was explicitly
      * designed for concurrent modification (such as a {@link ConcurrentHashMap}),
      * unpredictable or erroneous behavior may result from modifying the stream
      * source while it is being queried.
+     *  一个流管道，可以看做是对流源的查询，除非这个流被显示的设计成可以并发修改的。否则会抛出异常。
+     *  （如一个线程对流进行修改，另一个对流进行查询）
      *
      * <p>Most stream operations accept parameters that describe user-specified
      * behavior, such as the lambda expression {@code w -> w.getWeight()} passed to
