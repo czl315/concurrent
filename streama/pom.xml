@@ -21,7 +21,7 @@
         <druid.version>1.1.0</druid.version>
         <commons.lang3.version>3.5</commons.lang3.version>
         <commons.collections.version>3.2.2</commons.collections.version>
-        <fastjson.version>1.2.70</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <poi.version>3.8</poi.version>
         <guava.version>23.2-jre</guava.version>
         <gson.version>2.8.2</gson.version>
@@ -111,7 +111,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.70</version>
+            <version>1.2.83</version>
         </dependency>
 
     </dependencies>
